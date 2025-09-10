@@ -1,0 +1,54 @@
+{{define "content"}}
+<article class="story-reader">
+    <header class="story-header">
+        <h1>{{.Story.Title}}</h1>
+        <div class="story-meta-full">
+            <time>{{.Story.PublishedAt.Format "January 2, 2006"}}</time>
+            {{if .Story.Price}}
+                <span class="price">${{printf "%.2f" .Story.Price}}</span>
+            {{end}}
+            <span class="reading-time">~{{.ReadingTime}} min read</span>
+        </div>
+    </header>
+
+    {{if .ShowPreview}}
+        <!-- Preview mode for paid content -->
+        <div class="story-content preview">
+            <div class="preview-text">
+                {{.Preview}}
+            </div>
+            <div class="paywall">
+                <h3>Continue Reading</h3>
+                <p>This story is premium content.</p>
+                <div class="paywall-options">
+                    <button class="btn-primary">Buy this story - ${{printf "%.2f" .Story.Price}}</button>
+                    <button class="btn-secondary">Subscribe monthly - $9.99</button>
+                </div>
+                <p class="subscription-note">Subscribers get access to all stories plus exclusive content</p>
+            </div>
+        </div>
+    {{else}}
+        <!-- Full content -->
+        <div class="story-content">
+            <div class="content-text">
+                {{.FormattedContent}}
+            </div>
+        </div>
+    {{end}}
+
+    <footer class="story-footer">
+        <div class="story-actions">
+            <button class="btn-outline">❤️ Favorite</button>
+            <button class="btn-outline">📤 Share</button>
+        </div>
+        <div class="navigation">
+            {{if .PreviousStory}}
+                <a href="/stories/{{.PreviousStory.ID}}" class="nav-link">← Previous: {{.PreviousStory.Title}}</a>
+            {{end}}
+            {{if .NextStory}}
+                <a href="/stories/{{.NextStory.ID}}" class="nav-link">Next: {{.NextStory.Title}} →</a>
+            {{end}}
+        </div>
+    </footer>
+</article>
+{{end}}

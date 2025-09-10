@@ -23,21 +23,32 @@ Premium reading platform for short stories, essays, and articles.
 
 Server runs on http://localhost:8080
 
+### Web Interface
+
+#### Reader-Facing Pages
+- `GET /` - Homepage with featured stories
+- `GET /stories` - Browse all published stories
+- `GET /stories/:id` - Read individual story (Kindle-like experience)
+
+#### Admin Interface
+- `GET /admin` - Story management interface
+
 ### API Endpoints
 
-#### Public Routes
-- `GET /` - Welcome message
-- `GET /stories` - List published stories
-- `GET /stories/:id` - Get specific story
+#### Health & Info
 - `GET /health` - Health check with database status
 
-#### API Routes (`/api/v1`)
+#### JSON API Routes (`/api/v1`)
 - `GET /api/v1/stories` - List all stories (published only)
 - `GET /api/v1/stories/:id` - Get specific story
 - `POST /api/v1/stories` - Create new story
 - `PUT /api/v1/stories/:id` - Update story
 - `DELETE /api/v1/stories/:id` - Delete story
 - `POST /api/v1/stories/:id/publish` - Publish story
+
+#### Legacy JSON Routes
+- `GET /api/stories` - List published stories (JSON)
+- `GET /api/stories/:id` - Get specific story (JSON)
 
 ## Project Structure
 

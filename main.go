@@ -22,13 +22,17 @@ func main() {
 
 	r := gin.Default()
 
-	// Home page
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to Publishd - Premium Reading Platform",
-			"version": "0.1.0",
-		})
-	})
+	// Load HTML templates
+	r.LoadHTMLGlob("web/templates/*")
+	
+	// Serve static files
+	r.Static("/static", "./web/static")
+
+	// Web routes (HTML)
+	r.GET("/", handlers.RenderHome)
+	r.GET("/stories", handlers.RenderStoriesList)
+	r.GET("/stories/:id", handlers.RenderStory)
+	r.GET("/admin", handlers.RenderAdmin)
 
 	// Stories API routes
 	api := r.Group("/api/v1")
@@ -41,9 +45,9 @@ func main() {
 		api.POST("/stories/:id/publish", handlers.PublishStory)
 	}
 
-	// Public stories routes (for reading interface)
-	r.GET("/stories", handlers.GetStories)
-	r.GET("/stories/:id", handlers.GetStory)
+	// JSON API endpoint for stories (keep for API access)
+	r.GET("/api/stories", handlers.GetStories)
+	r.GET("/api/stories/:id", handlers.GetStory)
 
 	// Health check
 	r.GET("/health", func(c *gin.Context) {

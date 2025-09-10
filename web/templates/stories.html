@@ -1,0 +1,37 @@
+{{define "content"}}
+<div class="stories-header">
+    <h2>All Stories</h2>
+    <p>Explore our collection of premium content</p>
+</div>
+
+{{if .Stories}}
+    <div class="stories-list">
+        {{range .Stories}}
+        <article class="story-item">
+            <div class="story-content">
+                <h3><a href="/stories/{{.ID}}">{{.Title}}</a></h3>
+                <p class="excerpt">{{.Excerpt}}</p>
+                <div class="story-meta">
+                    <div class="meta-left">
+                        <time>{{.PublishedAt.Format "January 2, 2006"}}</time>
+                        <span class="reading-time">~5 min read</span>
+                    </div>
+                    <div class="meta-right">
+                        {{if .Price}}
+                            <span class="price">${{printf "%.2f" .Price}}</span>
+                        {{else}}
+                            <span class="price free">Free</span>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </article>
+        {{end}}
+    </div>
+{{else}}
+    <div class="empty-state">
+        <h3>No stories available</h3>
+        <p>Stories will appear here once they are published.</p>
+    </div>
+{{end}}
+{{end}}
