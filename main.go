@@ -25,34 +25,35 @@ func main() {
 
 	r := gin.Default()
 
-	// Load HTML templates - debug version
-	log.Println("🔍 Attempting to load templates...")
+	// Load HTML templates with proper nested template support
+	log.Println("🔍 Loading nested templates...")
 	
-	// Check what files exist
-	if files, err := filepath.Glob("web/templates/*.html"); err == nil && len(files) > 0 {
-		log.Printf("Found template files: %v", files)
-		r.LoadHTMLGlob("web/templates/*.html")
-		log.Println("✅ Templates loaded successfully")
-	} else if files, err := filepath.Glob("./web/templates/*.html"); err == nil && len(files) > 0 {
-		log.Printf("Found template files: %v", files)
-		r.LoadHTMLGlob("./web/templates/*.html")
-		log.Println("✅ Templates loaded successfully")
-	} else {
-		// If templates can't be found, create a simple inline template
-		log.Println("⚠️ Template files not found, using inline templates")
-		r.SetHTMLTemplate(template.Must(template.New("").Parse(`
-{{define "base.html"}}
-<!DOCTYPE html>
-<html>
-<head><title>Publishd - Debug Mode</title></head>
-<body>
-<h1>Publishd Platform</h1>
-<p>Template system is working! (Debug mode)</p>
-<a href="/health">Health Check</a>
-</body>
-</html>
-{{end}}
-		`)))
+	// The KEY difference: Parse all templates together into one template set
+	// This allows template inheritance to work properly
+	templatePaths := []string{
+		"web/templates/*.html",
+		"./web/templates/*.html", 
+		"templates/*.html",
+	}
+	
+	var templatesLoaded bool
+	for _, pattern := range templatePaths {
+		if files, err := filepath.Glob(pattern); err == nil && len(files) > 0 {
+			log.Printf("Found template files: %v", files)
+			
+			// This is the CORRECT way to handle nested templates in Gin:
+			// Parse all templates together so they can reference each other
+			tmpl := template.Must(template.ParseGlob(pattern))
+			r.SetHTMLTemplate(tmpl)
+			
+			templatesLoaded = true
+			log.Println("✅ Nested templates loaded successfully")
+			break
+		}
+	}
+	
+	if !templatesLoaded {
+		log.Fatal("❌ Failed to load HTML templates from any path")
 	}
 	
 	// Serve static files with fallback paths
