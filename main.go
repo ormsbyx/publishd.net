@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"publishd.net/internal/database"
@@ -23,11 +24,36 @@ func main() {
 
 	r := gin.Default()
 
-	// Load HTML templates
-	r.LoadHTMLGlob("web/templates/*")
+	// Load HTML templates with fallback paths
+	templatePaths := []string{
+		"web/templates/*.html",
+		"./web/templates/*.html", 
+		"templates/*.html",
+	}
 	
-	// Serve static files
-	r.Static("/static", "./web/static")
+	var templatesLoaded bool
+	for _, pattern := range templatePaths {
+		if _, err := filepath.Glob(pattern); err == nil {
+			r.LoadHTMLGlob(pattern)
+			templatesLoaded = true
+			log.Printf("✅ Loaded templates from: %s", pattern)
+			break
+		}
+	}
+	
+	if !templatesLoaded {
+		log.Fatal("❌ Failed to load HTML templates from any path")
+	}
+	
+	// Serve static files with fallback paths
+	staticPaths := []string{"./web/static", "web/static", "static"}
+	for _, path := range staticPaths {
+		if _, err := os.Stat(path); err == nil {
+			r.Static("/static", path)
+			log.Printf("✅ Serving static files from: %s", path)
+			break
+		}
+	}
 
 	// Web routes (HTML)
 	r.GET("/", handlers.RenderHome)
