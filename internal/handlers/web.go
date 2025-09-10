@@ -15,7 +15,7 @@ func RenderHome(c *gin.Context) {
 	// Get latest 6 stories for homepage
 	stories, err := models.GetAllStories(database.DB)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "base.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "home.html", gin.H{
 			"Title":  "Error",
 			"Error":  "Failed to load stories",
 			"Stories": []models.Story{},
@@ -28,7 +28,7 @@ func RenderHome(c *gin.Context) {
 		stories = stories[:6]
 	}
 
-	c.HTML(http.StatusOK, "base.html", gin.H{
+	c.HTML(http.StatusOK, "home.html", gin.H{
 		"Title":   "Home",
 		"Stories": stories,
 	})
@@ -37,7 +37,7 @@ func RenderHome(c *gin.Context) {
 func RenderStoriesList(c *gin.Context) {
 	stories, err := models.GetAllStories(database.DB)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "base.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "stories.html", gin.H{
 			"Title":   "Stories",
 			"Error":   "Failed to load stories",
 			"Stories": []models.Story{},
@@ -45,7 +45,7 @@ func RenderStoriesList(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "base.html", gin.H{
+	c.HTML(http.StatusOK, "stories.html", gin.H{
 		"Title":   "Stories",
 		"Stories": stories,
 	})
@@ -55,7 +55,7 @@ func RenderStory(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "base.html", gin.H{
+		c.HTML(http.StatusBadRequest, "story.html", gin.H{
 			"Title": "Invalid Story",
 			"Error": "Invalid story ID",
 		})
@@ -64,7 +64,7 @@ func RenderStory(c *gin.Context) {
 
 	story, err := models.GetStoryByID(database.DB, id)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "base.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "story.html", gin.H{
 			"Title": "Error",
 			"Error": "Failed to load story",
 		})
@@ -72,7 +72,7 @@ func RenderStory(c *gin.Context) {
 	}
 
 	if story == nil {
-		c.HTML(http.StatusNotFound, "base.html", gin.H{
+		c.HTML(http.StatusNotFound, "story.html", gin.H{
 			"Title": "Story Not Found",
 			"Error": "Story not found",
 		})
@@ -107,7 +107,7 @@ func RenderStory(c *gin.Context) {
 		formattedContent = template.HTML(formatted)
 	}
 
-	c.HTML(http.StatusOK, "base.html", gin.H{
+	c.HTML(http.StatusOK, "story.html", gin.H{
 		"Title":            story.Title,
 		"Story":            story,
 		"ReadingTime":      readingTime,
@@ -119,7 +119,7 @@ func RenderStory(c *gin.Context) {
 }
 
 func RenderAdmin(c *gin.Context) {
-	c.HTML(http.StatusOK, "base.html", gin.H{
+	c.HTML(http.StatusOK, "admin.html", gin.H{
 		"Title": "Admin - Story Management",
 	})
 }
@@ -127,14 +127,14 @@ func RenderAdmin(c *gin.Context) {
 func RenderUnpublishedStories(c *gin.Context) {
 	stories, err := models.GetUnpublishedStories(database.DB)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "base.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "unpublished.html", gin.H{
 			"Title": "Error",
 			"Error": "Failed to load unpublished stories",
 		})
 		return
 	}
 
-	c.HTML(http.StatusOK, "base.html", gin.H{
+	c.HTML(http.StatusOK, "unpublished.html", gin.H{
 		"Title":   "Unpublished Stories",
 		"Stories": stories,
 	})

@@ -31,12 +31,19 @@ func LoadConfig() *Config {
 }
 
 func Connect() error {
-	config := LoadConfig()
+	var dsn string
 	
-	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode,
-	)
+	// Check if DATABASE_URL is provided (used by Render and other cloud providers)
+	if databaseURL := os.Getenv("DATABASE_URL"); databaseURL != "" {
+		dsn = databaseURL
+	} else {
+		// Fall back to individual environment variables
+		config := LoadConfig()
+		dsn = fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+			config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode,
+		)
+	}
 
 	var err error
 	DB, err = sql.Open("postgres", dsn)

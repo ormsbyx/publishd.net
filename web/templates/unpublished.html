@@ -1,4 +1,24 @@
-{{define "content"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Publishd</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><a href="/">Publishd</a></h1>
+            <nav>
+                <a href="/stories">Stories</a>
+                <a href="/admin">Admin</a>
+                <a href="/admin/unpublished">Drafts</a>
+            </nav>
+        </header>
+
+        <main class="main">
 <div class="admin-header">
     <h2>Unpublished Stories</h2>
     <p>Review and publish your draft stories</p>
@@ -31,7 +51,7 @@
                     {{if .Excerpt}}
                         <p>{{.Excerpt}}</p>
                     {{else}}
-                        <p>{{substr .Content 0 150}}...</p>
+                        <p>{{.Content}}</p>
                     {{end}}
                 </div>
                 
@@ -187,4 +207,11 @@ function editStory(storyId) {
     alert('Edit functionality coming soon!');
 }
 </script>
-{{end}}
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Publishd. Premium reading experience.</p>
+        </footer>
+    </div>
+</body>
+</html>
