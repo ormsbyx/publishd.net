@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: publishd-web
+    runtime: go
+    buildCommand: go build -o bin/publishd .
+    startCommand: ./bin/publishd
+    plan: free
+    env: go
+    healthCheckPath: /health
+    envVars:
+      - key: GIN_MODE
+        value: release
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        fromDatabase:
+          name: publishd-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: publishd-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: publishd-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: publishd-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: publishd-db
+          property: password
+      - key: DB_SSLMODE
+        value: require
+
+databases:
+  - name: publishd-db
+    plan: free
+    databaseName: publishd
+    user: publishd_user

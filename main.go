@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"publishd.net/internal/database"
@@ -62,5 +63,12 @@ func main() {
 		})
 	})
 
-	r.Run(":8080")
+	// Get port from environment variable (Render sets this)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	
+	log.Printf("Server starting on port %s", port)
+	r.Run(":" + port)
 }
