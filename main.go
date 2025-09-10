@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -24,25 +25,34 @@ func main() {
 
 	r := gin.Default()
 
-	// Load HTML templates with fallback paths
-	templatePaths := []string{
-		"web/templates/*.html",
-		"./web/templates/*.html", 
-		"templates/*.html",
-	}
+	// Load HTML templates - debug version
+	log.Println("🔍 Attempting to load templates...")
 	
-	var templatesLoaded bool
-	for _, pattern := range templatePaths {
-		if _, err := filepath.Glob(pattern); err == nil {
-			r.LoadHTMLGlob(pattern)
-			templatesLoaded = true
-			log.Printf("✅ Loaded templates from: %s", pattern)
-			break
-		}
-	}
-	
-	if !templatesLoaded {
-		log.Fatal("❌ Failed to load HTML templates from any path")
+	// Check what files exist
+	if files, err := filepath.Glob("web/templates/*.html"); err == nil && len(files) > 0 {
+		log.Printf("Found template files: %v", files)
+		r.LoadHTMLGlob("web/templates/*.html")
+		log.Println("✅ Templates loaded successfully")
+	} else if files, err := filepath.Glob("./web/templates/*.html"); err == nil && len(files) > 0 {
+		log.Printf("Found template files: %v", files)
+		r.LoadHTMLGlob("./web/templates/*.html")
+		log.Println("✅ Templates loaded successfully")
+	} else {
+		// If templates can't be found, create a simple inline template
+		log.Println("⚠️ Template files not found, using inline templates")
+		r.SetHTMLTemplate(template.Must(template.New("").Parse(`
+{{define "base.html"}}
+<!DOCTYPE html>
+<html>
+<head><title>Publishd - Debug Mode</title></head>
+<body>
+<h1>Publishd Platform</h1>
+<p>Template system is working! (Debug mode)</p>
+<a href="/health">Health Check</a>
+</body>
+</html>
+{{end}}
+		`)))
 	}
 	
 	// Serve static files with fallback paths
