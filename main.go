@@ -1,18 +1,44 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Starting Publishd server...")
-	
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Welcome to Publishd - Premium Reading Platform")
+	r := gin.Default()
+
+	// Home page
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Welcome to Publishd - Premium Reading Platform",
+			"version": "0.1.0",
+		})
 	})
-	
-	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	// Stories routes
+	r.GET("/stories", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"stories": []string{},
+			"message": "Story listing coming soon",
+		})
+	})
+
+	r.GET("/stories/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		c.JSON(http.StatusOK, gin.H{
+			"story_id": id,
+			"message":  "Individual story view coming soon",
+		})
+	})
+
+	// Health check
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "healthy",
+		})
+	})
+
+	r.Run(":8080")
 }
