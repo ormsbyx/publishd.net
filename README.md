@@ -4,11 +4,30 @@ Premium reading platform for short stories, essays, and articles.
 
 ## Development
 
-```bash
-go run main.go
-```
+### Prerequisites
+- Go 1.25+
+- PostgreSQL database
+
+### Setup
+1. Copy environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Update `.env` with your database credentials
+
+3. Start the server:
+   ```bash
+   go run main.go
+   ```
 
 Server runs on http://localhost:8080
+
+### API Endpoints
+- `GET /` - Welcome message
+- `GET /stories` - List all stories  
+- `GET /stories/:id` - Get specific story
+- `GET /health` - Health check with database status
 
 ## Project Structure
 

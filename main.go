@@ -1,12 +1,19 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"publishd.net/internal/database"
 )
 
 func main() {
+	// Initialize database connection
+	if err := database.Connect(); err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
+
 	r := gin.Default()
 
 	// Home page
@@ -35,8 +42,14 @@ func main() {
 
 	// Health check
 	r.GET("/health", func(c *gin.Context) {
+		dbStatus := "connected"
+		if err := database.DB.Ping(); err != nil {
+			dbStatus = "disconnected"
+		}
+		
 		c.JSON(http.StatusOK, gin.H{
-			"status": "healthy",
+			"status":   "healthy",
+			"database": dbStatus,
 		})
 	})
 
