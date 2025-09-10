@@ -4,7 +4,8 @@
       "Bash(export:*)",
       "Bash(go build:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Read(//var/folders/ck/wyws10w51qqf2xpzmq3hs_hw0000gn/T/TemporaryItems/NSIRD_screencaptureui_6UVIs3/**)"
     ],
     "deny": [],
     "ask": []
