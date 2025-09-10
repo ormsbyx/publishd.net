@@ -1,31 +1,57 @@
-{{define "content"}}
-<div class="hero">
-    <h2>Premium Reading Experience</h2>
-    <p class="hero-subtitle">Discover thoughtfully crafted stories, essays, and articles</p>
-    <a href="/stories" class="cta-button">Browse Stories</a>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - Publishd</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><a href="/">Publishd</a></h1>
+            <nav>
+                <a href="/stories">Stories</a>
+                <a href="/admin">Admin</a>
+            </nav>
+        </header>
 
-<section class="featured">
-    <h3>Latest Stories</h3>
-    {{if .Stories}}
-        <div class="story-grid">
-            {{range .Stories}}
-            <article class="story-card">
-                <h4><a href="/stories/{{.ID}}">{{.Title}}</a></h4>
-                <p class="excerpt">{{.Excerpt}}</p>
-                <div class="story-meta">
-                    {{if .Price}}
-                        <span class="price">${{printf "%.2f" .Price}}</span>
-                    {{else}}
-                        <span class="price">Free</span>
-                    {{end}}
-                    <time>{{.PublishedAt.Format "Jan 2, 2006"}}</time>
-                </div>
-            </article>
-            {{end}}
-        </div>
-    {{else}}
-        <p class="empty-state">No stories published yet. Check back soon!</p>
-    {{end}}
-</section>
-{{end}}
+        <main class="main">
+            <div class="hero">
+                <h2>Premium Reading Experience</h2>
+                <p class="hero-subtitle">Discover thoughtfully crafted stories, essays, and articles</p>
+                <a href="/stories" class="cta-button">Browse Stories</a>
+            </div>
+
+            <section class="featured">
+                <h3>Latest Stories</h3>
+                {{if .Stories}}
+                    <div class="story-grid">
+                        {{range .Stories}}
+                        <article class="story-card">
+                            <h4><a href="/stories/{{.ID}}">{{.Title}}</a></h4>
+                            <p class="excerpt">{{.Excerpt}}</p>
+                            <div class="story-meta">
+                                {{if .Price}}
+                                    <span class="price">${{printf "%.2f" .Price}}</span>
+                                {{else}}
+                                    <span class="price">Free</span>
+                                {{end}}
+                                <time>{{.PublishedAt.Format "Jan 2, 2006"}}</time>
+                            </div>
+                        </article>
+                        {{end}}
+                    </div>
+                {{else}}
+                    <p class="empty-state">No stories published yet. Check back soon!</p>
+                {{end}}
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Publishd. Premium reading experience.</p>
+        </footer>
+    </div>
+</body>
+</html>
