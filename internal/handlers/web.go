@@ -123,3 +123,19 @@ func RenderAdmin(c *gin.Context) {
 		"Title": "Admin - Story Management",
 	})
 }
+
+func RenderUnpublishedStories(c *gin.Context) {
+	stories, err := models.GetUnpublishedStories(database.DB)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "base.html", gin.H{
+			"Title": "Error",
+			"Error": "Failed to load unpublished stories",
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "base.html", gin.H{
+		"Title":   "Unpublished Stories",
+		"Stories": stories,
+	})
+}

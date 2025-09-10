@@ -65,6 +65,41 @@ func GetAllStories(db *sql.DB) ([]Story, error) {
 	return stories, nil
 }
 
+func GetUnpublishedStories(db *sql.DB) ([]Story, error) {
+	query := `
+		SELECT id, title, content, excerpt, price, published_at, created_at
+		FROM stories
+		WHERE published_at IS NULL
+		ORDER BY created_at DESC
+	`
+	
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var stories []Story
+	for rows.Next() {
+		var story Story
+		err := rows.Scan(
+			&story.ID,
+			&story.Title,
+			&story.Content,
+			&story.Excerpt,
+			&story.Price,
+			&story.PublishedAt,
+			&story.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		stories = append(stories, story)
+	}
+
+	return stories, nil
+}
+
 func GetStoryByID(db *sql.DB, id int) (*Story, error) {
 	query := `
 		SELECT id, title, content, excerpt, price, published_at, created_at

@@ -71,6 +71,7 @@ func main() {
 	r.GET("/stories", handlers.RenderStoriesList)
 	r.GET("/stories/:id", handlers.RenderStory)
 	r.GET("/admin", handlers.RenderAdmin)
+	r.GET("/admin/unpublished", handlers.RenderUnpublishedStories)
 
 	// Stories API routes
 	api := r.Group("/api/v1")
